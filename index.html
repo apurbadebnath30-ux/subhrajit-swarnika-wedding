@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#650d19">
+<title>Subhrajit & Swarnika — Wedding Invitation</title>
+<style>
+:root{--maroon:#650d19;--gold:#e8c77e;--cream:#fff1d5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#2c080e;color:var(--cream);font-family:Georgia,serif}
+.cover{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle,#8e1b27,#350710)}
+.cover img{display:block;width:min(100%,560px);max-height:78svh;object-fit:contain;box-shadow:0 12px 45px #160307aa;border:1px solid #d8b56e}
+.open-wrap{text-align:center;padding:18px 12px 8px}
+button{border:1px solid #f4d995;background:linear-gradient(135deg,#f3d995,#c49342);color:#4b1018;padding:14px 25px;border-radius:999px;font: bold 16px Georgia,serif;cursor:pointer;box-shadow:0 5px 18px #17030766}
+.hint{font-size:13px;color:#f4dfb6;margin:10px}
+.letter{display:none;min-height:100svh;padding:55px 18px 70px;position:relative;overflow:hidden;background:radial-gradient(ellipse at top,#8d1b2b,#3b0912 72%)}
+.letter.show{display:block;animation:reveal 1s ease}
+@keyframes reveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.paper{position:relative;z-index:2;width:min(100%,650px);margin:auto;padding:34px 24px;background:#fff2d8;color:#64202a;border:5px double #c49a52;outline:1px solid #f4d995;outline-offset:5px;text-align:center;box-shadow:0 15px 45px #16030788}
+.paper .om{font-size:26px;color:#a77b34}
+.paper h1{font-size:clamp(29px,7vw,45px);font-weight:normal;margin:16px 0;color:#751c2b}
+.paper h2{font-size:23px;font-weight:normal;color:#9a6b2d}
+.paper p{line-height:1.85;font-size:17px}
+.names{font-size:24px;line-height:1.8;color:#761c2b}
+.meta{margin-top:22px;padding:15px;border-top:1px solid #c49a52;border-bottom:1px solid #c49a52}
+.flower{position:fixed;top:-35px;z-index:5;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--drift),110vh,0) rotate(620deg)}}
+.controls{margin-top:20px}
+.note{font-size:12px;color:#83515a}
+footer{padding:25px;text-align:center;color:#e8c77e}
+@media(max-width:420px){.paper{padding:27px 17px}.paper p{font-size:16px}}
+</style>
+</head>
+<body>
+<section class="cover" id="cover">
+  <img src="invitation-cover.png" alt="Bengali wedding invitation for Subhrajit and Swarnika">
+  <div class="open-wrap">
+    <button id="openBtn" type="button">Open the Letter ✉</button>
+    <div class="hint">A little message awaits you</div>
+  </div>
+</section>
+
+<section class="letter" id="letter">
+  <article class="paper">
+    <div class="om">॥ শুভ সূচনা ॥</div>
+    <h1>You're Invited!</h1>
+    <h2>With love and blessings</h2>
+    <p>With immense joy, our family invites you to celebrate the wedding of</p>
+    <div class="names">শুভ্রজিৎ দেবনাথ<br><span style="color:#a77b34">&</span><br>স্বর্ণিকা সাহা</div>
+    <div class="meta">
+      <h2>১৩ ডিসেম্বর ২০২৬</h2>
+      <p><strong>Wedding Celebration</strong><br>Ambassa, Our Home</p>
+    </div>
+    <p>Join us as two hearts begin a beautiful journey together.<br>Your presence and blessings will make our day truly special.</p>
+    <h2>সাদর আমন্ত্রণ</h2>
+    <p class="note">With warm regards,<br>The Debnath & Saha Families</p>
+    <div class="controls">
+      <button id="musicBtn" type="button">Pause Shehnai ♪</button>
+      <p class="note">The shehnai-inspired instrumental starts when you open this letter.</p>
+    </div>
+  </article>
+  <footer>শুভ বিবাহ • Subhrajit & Swarnika</footer>
+</section>
+
+<audio id="shehnai" src="shehnai-inspired.wav" preload="auto" loop></audio>
+<script>
+const openBtn=document.getElementById('openBtn');
+const letter=document.getElementById('letter');
+const cover=document.getElementById('cover');
+const audio=document.getElementById('shehnai');
+const musicBtn=document.getElementById('musicBtn');
+let flowerTimer=null;
+
+function dropFlower(){
+  const el=document.createElement('span');
+  el.className='flower';
+  el.textContent=['🌸','🌼','✿','❀'][Math.floor(Math.random()*4)];
+  el.style.left=(Math.random()*100)+'vw';
+  el.style.fontSize=(17+Math.random()*18)+'px';
+  el.style.setProperty('--drift',((Math.random()*140)-70)+'px');
+  const seconds=5+Math.random()*5;
+  el.style.animationDuration=seconds+'s';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),seconds*1000);
+}
+openBtn.addEventListener('click',async()=>{
+  cover.style.display='none';
+  letter.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+  for(let i=0;i<18;i++) setTimeout(dropFlower,i*100);
+  if(!flowerTimer) flowerTimer=setInterval(dropFlower,420);
+  try{await audio.play();musicBtn.textContent='Pause Shehnai ♪';}
+  catch(e){musicBtn.textContent='Play Shehnai ♪';}
+});
+musicBtn.addEventListener('click',async()=>{
+  if(audio.paused){
+    try{await audio.play();musicBtn.textContent='Pause Shehnai ♪';}
+    catch(e){musicBtn.textContent='Play Shehnai ♪';}
+  }else{audio.pause();musicBtn.textContent='Play Shehnai ♪';}
+});
+</script>
+</body>
+</html>
