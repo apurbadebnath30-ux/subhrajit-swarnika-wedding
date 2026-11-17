@@ -1,1 +1,0 @@
-# subhrajit-swarnika-wedding
